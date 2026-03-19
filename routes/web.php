@@ -5,8 +5,8 @@ use App\Http\Controllers\AdminController;
 use \App\Http\Controllers\DoctorController;
 
 Route::get('/', [DoctorController::class, 'index']);
-Route::post('/store-doctor', [DoctorController::class, 'store']);
-Route::get('/get-employee/{code}', [DoctorController::class, 'getEmployee']);
+Route::post('/store-doctor', [DoctorController::class, 'store'])->name('store.doctor');
+Route::get('/get-employee/{code}', [DoctorController::class, 'getEmployee'])->name('get.employee');
 
 
 
