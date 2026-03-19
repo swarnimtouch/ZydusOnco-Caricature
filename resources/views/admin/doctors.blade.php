@@ -566,7 +566,6 @@
                         {{-- Doctor Name --}}
                         <td>
                             <div class="doc-name-cell">
-                                <div class="doc-av {{ $c }}">{{ strtoupper(substr($doctor->name, 0, 1)) }}</div>
                                 <span class="doc-name-text">{{ $doctor->name }}</span>
                             </div>
                         </td>
