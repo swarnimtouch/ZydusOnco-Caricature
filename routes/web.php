@@ -11,7 +11,7 @@ Route::get('/get-employee/{code}', [DoctorController::class, 'getEmployee'])->na
 
 
 ROute::get('import-employees',[AdminController::class, 'importEmployeesForm']);
-Route::post('/import-employees', [AdminController::class, 'importEmployees']);
+Route::post('/import-employees', [AdminController::class, 'importEmployees'])->name('import.employees');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login',  [AdminController::class, 'showLoginForm'])->name('login');
