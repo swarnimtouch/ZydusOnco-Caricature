@@ -65,21 +65,36 @@
             flex: 1;
             min-width: 180px;
         }
-        .search-wrap i {
+        .search-wrap i.search-icon {
             position: absolute;
             left: 12px; top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
             font-size: 13px;
             pointer-events: none;
+            transition: color 0.2s;
         }
+        /* Spinner inside search box */
+        .search-spinner {
+            display: none;
+            position: absolute;
+            right: 12px; top: 50%;
+            transform: translateY(-50%);
+            width: 14px; height: 14px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+
         .filter-input {
             background: rgba(255,255,255,0.06);
             border: 1px solid var(--border);
             border-radius: 8px;
             color: var(--text-primary);
             font-size: 0.855rem;
-            padding: 9px 12px 9px 36px;
+            padding: 9px 36px 9px 36px;
             width: 100%;
             outline: none;
             font-family: 'Outfit', sans-serif;
@@ -132,10 +147,7 @@
             border-bottom: 1px solid var(--border);
             white-space: nowrap;
         }
-
-        /* Doctor columns — slightly highlighted header */
-        .doc-table th.th-doctor { color: #7b9ff5; }
-        /* Employee columns */
+        .doc-table th.th-doctor   { color: #7b9ff5; }
         .doc-table th.th-employee { color: #5bc0aa; }
 
         .doc-table td {
@@ -188,8 +200,6 @@
             border-color: rgba(91,192,170,0.25);
         }
         .text-muted-sm { font-size: 0.8rem; color: var(--text-muted); }
-
-        /* Column group separator */
         .col-sep { border-left: 2px solid rgba(255,255,255,0.06) !important; }
 
         .photo-thumb {
@@ -275,7 +285,6 @@
             to   { opacity:1; transform:translateY(0); }
         }
 
-        /* Card Header */
         .m-card-header {
             display: flex;
             align-items: center;
@@ -322,7 +331,6 @@
             white-space: nowrap; flex-shrink: 0;
         }
 
-        /* Section label inside card */
         .m-section-label {
             font-size: 0.6rem;
             font-weight: 700;
@@ -334,14 +342,8 @@
             align-items: center;
             gap: 6px;
         }
-        .m-section-label.doctor {
-            color: #7b9ff5;
-            background: rgba(78,115,223,0.05);
-        }
-        .m-section-label.employee {
-            color: #5bc0aa;
-            background: rgba(91,192,170,0.05);
-        }
+        .m-section-label.doctor   { color: #7b9ff5; background: rgba(78,115,223,0.05); }
+        .m-section-label.employee { color: #5bc0aa; background: rgba(91,192,170,0.05); }
 
         .m-card-body { padding: 12px 16px; }
 
@@ -376,25 +378,10 @@
             word-break: break-word;
             line-height: 1.35;
         }
-        .m-field-value.mono {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.73rem;
-            color: #7b9ff5;
-        }
-        .m-field-value.mono-emp {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.73rem;
-            color: #5bc0aa;
-        }
-        .m-field-value.muted {
-            color: var(--text-muted);
-            font-weight: 400;
-            font-style: italic;
-        }
-        .m-field-value.email-val {
-            font-size: 0.76rem;
-            word-break: break-all;
-        }
+        .m-field-value.mono     { font-family: 'Space Mono', monospace; font-size: 0.73rem; color: #7b9ff5; }
+        .m-field-value.mono-emp { font-family: 'Space Mono', monospace; font-size: 0.73rem; color: #5bc0aa; }
+        .m-field-value.muted    { color: var(--text-muted); font-weight: 400; font-style: italic; }
+        .m-field-value.email-val { font-size: 0.76rem; word-break: break-all; }
 
         .m-card-footer {
             display: flex;
@@ -455,14 +442,8 @@
             width: 100%; border-radius: 12px;
             object-fit: cover; display: block; max-height: 420px;
         }
-        .photo-modal-name {
-            text-align: center; margin-top: 14px;
-            font-size: 1rem; font-weight: 700; color: var(--text-primary);
-        }
-        .photo-modal-empid {
-            text-align: center; font-size: 0.75rem;
-            color: var(--text-muted); font-family: 'Space Mono', monospace; margin-top: 4px;
-        }
+        .photo-modal-name  { text-align: center; margin-top: 14px; font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+        .photo-modal-empid { text-align: center; font-size: 0.75rem; color: var(--text-muted); font-family: 'Space Mono', monospace; margin-top: 4px; }
         .photo-modal-close {
             position: absolute; top: -13px; right: -13px;
             width: 32px; height: 32px; border-radius: 50%;
@@ -503,43 +484,36 @@
         </div>
     @endif
 
-    {{-- ── Filter Bar ── --}}
-    <form method="GET" action="{{ route('admin.doctors.index') }}">
-        <div class="filter-bar">
-            <div class="search-wrap">
-                <i class="fas fa-search"></i>
-                <input type="text" name="search" value="{{ request('search') }}"
-                       class="filter-input" placeholder="Search by name or Employee ID...">
-            </div>
-            <button type="submit" class="btn-add" style="padding:8px 18px;">
-                <i class="fas fa-filter"></i> Filter
-            </button>
+    {{-- ── Live Search Bar — no submit button ── --}}
+    <div class="filter-bar">
+        <div class="search-wrap">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text"
+                   id="liveSearch"
+                   value="{{ request('search') }}"
+                   class="filter-input"
+                   placeholder="Type to search by name or Employee ID..."
+                   autocomplete="off">
+            <span class="search-spinner" id="searchSpinner"></span>
         </div>
-    </form>
+    </div>
 
     {{-- ════════════════════════════════════════
          DESKTOP TABLE (≥ 768px)
-         Doctor fields PEHLE, phir Employee fields
     ════════════════════════════════════════ --}}
     <div class="glass-card desktop-view">
         <div class="table-wrap">
             <table class="doc-table">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>SR NO.</th>
                     <th>Photo</th>
-
-                    {{-- Doctor Columns --}}
                     <th class="th-doctor">Doctor Name</th>
                     <th class="th-doctor">Hospital Name</th>
                     <th class="th-doctor">Doctor City</th>
-
-                    {{-- Employee Columns --}}
-                    <th class="th-employee ">Employee Name</th>
+                    <th class="th-employee col-sep">Employee Name</th>
                     <th class="th-employee">Employee Code</th>
                     <th class="th-employee">Employee City</th>
-
-
                     <th>Created</th>
                     <th>Action</th>
                 </tr>
@@ -548,10 +522,8 @@
                 @forelse($doctors as $index => $doctor)
                     @php $colors = ['c1','c2','c3','c4','c5']; $c = $colors[$index % 5]; @endphp
                     <tr>
-                        {{-- # --}}
                         <td class="serial-cell">{{ $doctors->firstItem() + $index }}</td>
 
-                        {{-- Photo --}}
                         <td>
                             @if($doctor->photo)
                                 <img src="{{ $doctor->photo }}"
@@ -563,35 +535,23 @@
                             @endif
                         </td>
 
-                        {{-- Doctor Name --}}
                         <td>
                             <div class="doc-name-cell">
                                 <span class="doc-name-text">{{ $doctor->name }}</span>
                             </div>
                         </td>
 
-                        {{-- Hospital Name --}}
                         <td><span class="badge-mono">{{ $doctor->hospital_name }}</span></td>
-
-                        {{-- Doctor City --}}
                         <td class="text-muted-sm">{{ $doctor->city ?? '—' }}</td>
 
-                        {{-- Employee Name --}}
-                        <td  style="font-weight:500;">{{ $doctor->employee->name ?? '—' }}</td>
-
-                        {{-- Employee Code --}}
+                        <td class="col-sep" style="font-weight:500;">{{ $doctor->employee->name ?? '—' }}</td>
                         <td><span class="badge-mono emp">{{ $doctor->employee->employee_code ?? '—' }}</span></td>
-
-                        {{-- Employee City --}}
                         <td class="text-muted-sm">{{ $doctor->employee->city ?? '—' }}</td>
 
-
-                        {{-- Created --}}
                         <td class="text-muted-sm" style="font-size:0.75rem; white-space:nowrap;">
-                            {{ $doctor->created_at->format('d M Y') }}
+                            {{ $doctor->created_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') }}
                         </td>
 
-                        {{-- Action --}}
                         <td>
                             <div class="action-btns">
                                 <form action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST"
@@ -606,7 +566,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="13">
+                        <td colspan="10">
                             <div class="empty-state">
                                 <i class="fas fa-user-md"></i>
                                 <h5>No records found</h5>
@@ -645,7 +605,6 @@
 
     {{-- ════════════════════════════════════════
          MOBILE CARDS (< 768px)
-         — Doctor section PEHLE, phir Employee —
     ════════════════════════════════════════ --}}
     <div class="mobile-view">
 
@@ -654,7 +613,6 @@
 
             <div class="m-card" style="animation-delay:{{ $index * 0.04 }}s;">
 
-                {{-- Card Header: Photo + Doctor Name + Hospital --}}
                 <div class="m-card-header">
                     @if($doctor->photo)
                         <img src="{{ $doctor->photo }}"
@@ -671,69 +629,46 @@
                     <span class="m-card-serial-badge">#{{ $doctors->firstItem() + $index }}</span>
                 </div>
 
-                {{-- ══ DOCTOR DETAILS ══ --}}
                 <div class="m-section-label doctor">
                     <i class="fas fa-user-md"></i> Doctor Details
                 </div>
                 <div class="m-card-body">
                     <div class="m-fields-grid">
-
-                        {{-- Doctor City --}}
                         <div class="m-field">
                             <div class="m-field-label"><i class="fas fa-city"></i> Doctor City</div>
-                            <div class="m-field-value {{ $doctor->city ? '' : 'muted' }}">
-                                {{ $doctor->city ?? 'Not set' }}
-                            </div>
+                            <div class="m-field-value {{ $doctor->city ? '' : 'muted' }}">{{ $doctor->city ?? 'Not set' }}</div>
                         </div>
-
-                        {{-- Hospital Name --}}
                         <div class="m-field">
                             <div class="m-field-label"><i class="fas fa-hospital"></i> Hospital Name</div>
-                            <div class="m-field-value {{ $doctor->hospital_name ? '' : 'muted' }}">
-                                {{ $doctor->hospital_name ?? 'Not set' }}
-                            </div>
+                            <div class="m-field-value {{ $doctor->hospital_name ? '' : 'muted' }}">{{ $doctor->hospital_name ?? 'Not set' }}</div>
                         </div>
-
                     </div>
                 </div>
 
-                {{-- ══ EMPLOYEE DETAILS ══ --}}
                 <div class="m-section-label employee">
                     <i class="fas fa-id-card"></i> Employee Details
                 </div>
                 <div class="m-card-body">
                     <div class="m-fields-grid">
-
-                        {{-- Employee Name --}}
                         <div class="m-field">
                             <div class="m-field-label"><i class="fas fa-user"></i> Employee Name</div>
                             <div class="m-field-value">{{ $doctor->employee->name ?? '—' }}</div>
                         </div>
-
-                        {{-- Employee Code --}}
                         <div class="m-field">
                             <div class="m-field-label"><i class="fas fa-id-badge"></i> Employee Code</div>
                             <div class="m-field-value mono-emp">{{ $doctor->employee->employee_code ?? '—' }}</div>
                         </div>
-
-                        {{-- Employee City --}}
                         <div class="m-field">
                             <div class="m-field-label"><i class="fas fa-map-marker-alt"></i> Employee City</div>
-                            <div class="m-field-value {{ $doctor->employee->city ? '' : 'muted' }}">
-                                {{ $doctor->employee->city ?? 'Not set' }}
-                            </div>
+                            <div class="m-field-value {{ $doctor->employee->city ? '' : 'muted' }}">{{ $doctor->employee->city ?? 'Not set' }}</div>
                         </div>
-
-
-
                     </div>
                 </div>
 
-                {{-- Card Footer: Created date + Delete --}}
                 <div class="m-card-footer">
                     <div class="m-card-date">
                         <i class="fas fa-calendar me-1"></i>
-                        {{ $doctor->created_at->format('d M Y') }}
+                        {{ $doctor->created_at->timezone('Asia/Kolkata')->format('d M Y, h:i A') }}
                     </div>
                     <form action="{{ route('admin.doctors.destroy', $doctor->id) }}" method="POST"
                           onsubmit="return confirm('Delete {{ $doctor->name }}?')">
@@ -744,7 +679,7 @@
                     </form>
                 </div>
 
-            </div>{{-- /.m-card --}}
+            </div>
 
         @empty
             <div class="glass-card">
@@ -756,12 +691,9 @@
             </div>
         @endforelse
 
-        {{-- Mobile Pagination --}}
         @if($doctors->hasPages())
             <div class="pagination-wrap" style="border:none; padding:4px 0 16px;">
-                <div class="page-info">
-                    {{ $doctors->firstItem() }}–{{ $doctors->lastItem() }} of {{ $doctors->total() }}
-                </div>
+                <div class="page-info">{{ $doctors->firstItem() }}–{{ $doctors->lastItem() }} of {{ $doctors->total() }}</div>
                 <div class="custom-pagination">
                     @if($doctors->onFirstPage())
                         <span class="page-btn" style="opacity:0.4;cursor:not-allowed;"><i class="fas fa-chevron-left"></i></span>
@@ -780,7 +712,7 @@
             </div>
         @endif
 
-    </div>{{-- /.mobile-view --}}
+    </div>
 
     {{-- ── Photo Preview Modal ── --}}
     <div class="photo-modal-overlay" id="photoModal" onclick="closePhotoModal(event)">
@@ -799,20 +731,51 @@
 
 @push('scripts')
     <script>
+        // ══════════════════════════════════════
+        // LIVE SEARCH — keyup pe auto redirect
+        // ══════════════════════════════════════
+        (function () {
+            const input   = document.getElementById('liveSearch');
+            const spinner = document.getElementById('searchSpinner');
+            let   timer   = null;
+
+            input.addEventListener('keyup', function () {
+                clearTimeout(timer);
+
+                const query = this.value.trim();
+
+                // Spinner dikhao
+                spinner.style.display = 'block';
+
+                // 400ms debounce — user type karna band kare tab navigate karo
+                timer = setTimeout(function () {
+                    const baseUrl = '{{ route('admin.doctors.index') }}';
+                    const url     = query.length > 0
+                        ? baseUrl + '?search=' + encodeURIComponent(query)
+                        : baseUrl;
+
+                    window.location.href = url;
+                }, 400);
+            });
+        })();
+
+        // ══════════════════════════════════════
+        // PHOTO MODAL
+        // ══════════════════════════════════════
         function openPhotoModal(src, name, empId) {
             const wrap = document.getElementById('modalImgWrap');
             if (src && src !== '' && src !== 'null') {
                 wrap.innerHTML = `<img src="${src}" alt="${name}">`;
             } else {
                 wrap.innerHTML = `
-                <div style="width:100%;height:180px;border-radius:12px;
-                     background:rgba(255,255,255,0.03);
-                     border:2px dashed rgba(255,255,255,0.08);
-                     display:flex;flex-direction:column;align-items:center;
-                     justify-content:center;color:rgba(255,255,255,0.3);gap:10px;">
-                    <i class="fas fa-user-md" style="font-size:2.5rem;opacity:0.25;"></i>
-                    <span style="font-size:0.82rem;">No photo uploaded</span>
-                </div>`;
+            <div style="width:100%;height:180px;border-radius:12px;
+                 background:rgba(255,255,255,0.03);
+                 border:2px dashed rgba(255,255,255,0.08);
+                 display:flex;flex-direction:column;align-items:center;
+                 justify-content:center;color:rgba(255,255,255,0.3);gap:10px;">
+                <i class="fas fa-user-md" style="font-size:2.5rem;opacity:0.25;"></i>
+                <span style="font-size:0.82rem;">No photo uploaded</span>
+            </div>`;
             }
             document.getElementById('modalName').textContent  = name  || '';
             document.getElementById('modalEmpId').textContent = empId ? 'Employee ID: ' + empId : '';
@@ -825,7 +788,7 @@
             }
         }
 
-        document.addEventListener('keydown', function(e) {
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') {
                 document.getElementById('photoModal').classList.remove('open');
             }

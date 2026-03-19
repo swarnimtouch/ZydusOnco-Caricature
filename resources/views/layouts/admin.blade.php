@@ -136,8 +136,8 @@
             transition: all 0.2s;
             color: var(--text-muted);
         }
-        .nav-item-link.active .nav-icon { 
-            background: var(--accent); 
+        .nav-item-link.active .nav-icon {
+            background: var(--accent);
             color: #fff;
             box-shadow: 0 4px 8px rgba(0, 158, 163, 0.25);
         }
@@ -235,10 +235,10 @@
             text-decoration: none;
             box-shadow: var(--shadow-sm);
         }
-        .topbar-btn:hover { 
-            background: var(--bg-card-h); 
-            color: var(--accent); 
-            border-color: var(--border-h); 
+        .topbar-btn:hover {
+            background: var(--bg-card-h);
+            color: var(--accent);
+            border-color: var(--border-h);
             transform: translateY(-1px);
         }
         .topbar-btn .badge-dot {
@@ -262,9 +262,9 @@
             text-decoration: none;
             transition: all 0.2s;
         }
-        .logout-btn:hover { 
-            background: rgba(239, 68, 68, 0.15); 
-            color: var(--accent-danger); 
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--accent-danger);
             transform: translateY(-1px);
         }
 
@@ -362,22 +362,13 @@
 </nav>
 
 <header id="topbar">
-    <button class="topbar-toggle" onclick="toggleSidebar()" title="Toggle Sidebar">
-        <i class="fas fa-bars"></i>
-    </button>
 
     <div class="topbar-breadcrumb">
         Admin &nbsp;/&nbsp; <span>@yield('page-title', 'Dashboard')</span>
     </div>
 
     <div class="topbar-right">
-        <a href="#" class="topbar-btn">
-            <i class="fas fa-bell"></i>
-            <span class="badge-dot"></span>
-        </a>
-        <a href="#" class="topbar-btn">
-            <i class="fas fa-search"></i>
-        </a>
+
 
         <form action="{{ route('admin.logout') }}" method="POST" style="display:inline">
             @csrf

@@ -7,13 +7,10 @@ use App\Models\Doctor;
 use Illuminate\Http\Request;
 use App\Imports\EmployeeImport;
 use Maatwebsite\Excel\Facades\Excel;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    //
     public function showLoginForm()
     {
         if (Auth::check()) {
@@ -43,37 +40,37 @@ class AdminController extends Controller
         ])->onlyInput('email');
     }
 
-
     public function logout(Request $request)
     {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('admin.login');
+        return redirect()->route('login');
     }
 
-    public function dashboard(){
+    public function dashboard()
+    {
         $totalDoctors  = Doctor::count();
         $recentDoctors = Doctor::latest()->take(5)->get();
 
         return view('admin.dashboard', compact('totalDoctors', 'recentDoctors'));
-
     }
 
     public function index(Request $request)
     {
-        $doctors = Doctor::with('employee') // 🔥 relation load
-        ->when($request->search, function ($q) use ($request) {
-            $q->where('name', 'like', '%' . $request->search . '%')
-                ->orWhereHas('employee', function($q2) use ($request){
-                    $q2->where('employee_code', 'like', '%' . $request->search . '%');
-                });
-        })
+        $doctors = Doctor::with('employee')
+            ->when($request->search, function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->search . '%')
+                    ->orWhereHas('employee', function ($q2) use ($request) {
+                        $q2->where('employee_code', 'like', '%' . $request->search . '%');
+                    });
+            })
             ->paginate(10);
 
         return view('admin.doctors', compact('doctors'));
     }
+
     public function destroy($id)
     {
         $doctor = Doctor::findOrFail($id);
@@ -82,17 +79,20 @@ class AdminController extends Controller
         return redirect()->route('admin.doctors.index')
             ->with('success', 'Doctor deleted successfully');
     }
+
     public function export(Request $request)
     {
         return Excel::download(
             new DoctorExport($request->search),
-            'doctors_' . now()->format('Ymd_His') . '.xlsx'
+            'doctors.xlsx'
         );
     }
-    public function importEmployeesForm(Request $request)
+
+    public function importEmployeesForm()
     {
         return view('import-employees-form');
     }
+
     public function importEmployees(Request $request)
     {
         $request->validate([
@@ -102,6 +102,5 @@ class AdminController extends Controller
         Excel::import(new EmployeeImport, $request->file('file'));
 
         return back()->with('success', 'Employees Imported Successfully');
-
     }
 }

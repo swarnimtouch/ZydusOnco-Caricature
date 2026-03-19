@@ -9,12 +9,11 @@ use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
 use Maatwebsite\Excel\Concerns\WithTitle;
-use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Font;
+use Carbon\Carbon;
 
 class DoctorExport implements
     FromCollection,
@@ -31,9 +30,6 @@ class DoctorExport implements
         $this->search = $search;
     }
 
-    /**
-     * Data collection with optional search filter
-     */
     public function collection()
     {
         return Doctor::with('employee')
@@ -48,21 +44,15 @@ class DoctorExport implements
             ->get();
     }
 
-    /**
-     * Sheet title
-     */
     public function title(): string
     {
         return 'Doctors';
     }
 
-    /**
-     * Column headings — Doctor fields pehle, phir Employee
-     */
     public function headings(): array
     {
         return [
-            '#',
+            'SR No.',
             'Doctor Name',
             'Hospital Name',
             'Doctor City',
@@ -73,37 +63,35 @@ class DoctorExport implements
             'Employee Mobile',
             'Employee Email',
             'Photo URL',
-            'Created At',
+            'Created At (IST)',
         ];
     }
 
-    /**
-     * Map each row — same order as headings
-     */
     public function map($doctor): array
     {
         static $index = 0;
         $index++;
 
+        $createdIST = Carbon::parse($doctor->created_at)
+            ->setTimezone('Asia/Kolkata')
+            ->format('d M Y, h:i A');
+
         return [
             $index,
             $doctor->name,
             $doctor->hospital_name,
-            $doctor->city ?? '—',
-            $doctor->employee->name        ?? '—',
+            $doctor->city                    ?? '—',
+            $doctor->employee->name          ?? '—',
             $doctor->employee->employee_code ?? '—',
-            $doctor->employee->city        ?? '—',
-            $doctor->employee->address     ?? '—',
-            $doctor->employee->phone       ?? '—',
-            $doctor->employee->email       ?? '—',
-            $doctor->photo                 ?? '—',
-            $doctor->created_at->format('d M Y, h:i A'),
+            $doctor->employee->city          ?? '—',
+            $doctor->employee->address       ?? '—',
+            $doctor->employee->phone         ?? '—',
+            $doctor->employee->email         ?? '—',
+            $doctor->photo                   ?? '—',
+            $createdIST,
         ];
     }
 
-    /**
-     * Column widths
-     */
     public function columnWidths(): array
     {
         return [
@@ -118,77 +106,104 @@ class DoctorExport implements
             'I' => 18,   // Employee Mobile
             'J' => 30,   // Employee Email
             'K' => 40,   // Photo URL
-            'L' => 22,   // Created At
+            'L' => 26,   // Created At (IST)
         ];
     }
 
-    /**
-     * Sheet styling
-     */
     public function styles(Worksheet $sheet): array
     {
         $lastRow = $sheet->getHighestRow();
         $lastCol = 'L';
 
-        $sheet->insertNewRowBefore(1, 1);
-        $sheet->mergeCells('A1:L1');
-        $sheet->setCellValue('A1', 'Doctor Records — Exported on ' . now()->format('d M Y, h:i A'));
+        // Freeze header row
+        $sheet->freezePane('A2');
 
-        $sheet->freezePane('A3');
+        // Row heights
+        $sheet->getRowDimension(1)->setRowHeight(26);
 
-        $sheet->getRowDimension(1)->setRowHeight(30);
-        $sheet->getRowDimension(2)->setRowHeight(22);
+        // Wrap text for long columns
+        $sheet->getStyle('H2:H' . $lastRow)->getAlignment()->setWrapText(true);
+        $sheet->getStyle('J2:J' . $lastRow)->getAlignment()->setWrapText(true);
+        $sheet->getStyle('K2:K' . $lastRow)->getAlignment()->setWrapText(true);
 
-        $sheet->getStyle('H3:H' . ($lastRow + 1))->getAlignment()->setWrapText(true);
-        $sheet->getStyle('J3:J' . ($lastRow + 1))->getAlignment()->setWrapText(true);
-        $sheet->getStyle('K3:K' . ($lastRow + 1))->getAlignment()->setWrapText(true);
-
-        for ($row = 3; $row <= $lastRow + 1; $row++) {
+        // Zebra striping — alternating teal tint rows
+        for ($row = 2; $row <= $lastRow; $row++) {
             if ($row % 2 === 0) {
-                $sheet->getStyle("A{$row}:{$lastCol}{$row}")->getFill()
+                $sheet->getStyle("A{$row}:{$lastCol}{$row}")
+                    ->getFill()
                     ->setFillType(Fill::FILL_SOLID)
-                    ->getStartColor()->setRGB('F4F6FB');
+                    ->getStartColor()->setRGB('E0F7F5');
             }
         }
 
         return [
             1 => [
-                'font'      => ['bold' => true, 'size' => 13, 'color' => ['rgb' => 'FFFFFF']],
-                'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '0F1E36']],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
-            ],
-
-            2 => [
-                'font'      => ['bold' => true, 'size' => 9, 'color' => ['rgb' => 'FFFFFF']],
-                'fill'      => ['fillType' => Fill::FILL_SOLID, 'startColor' => ['rgb' => '1A3A5C']],
-                'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER, 'vertical' => Alignment::VERTICAL_CENTER],
-                'borders'   => ['bottom' => ['borderStyle' => Border::BORDER_MEDIUM, 'color' => ['rgb' => '0A7C74']]],
-            ],
-
-            "A3:{$lastCol}" . ($lastRow + 1) => [
-                'alignment' => ['vertical' => Alignment::VERTICAL_CENTER, 'wrapText' => false],
-                'borders'   => [
-                    'allBorders' => ['borderStyle' => Border::BORDER_THIN, 'color' => ['rgb' => 'E0E4EC']],
+                'font' => [
+                    'bold'  => true,
+                    'size'  => 10,
+                    'color' => ['rgb' => 'FFFFFF'],
                 ],
-                'font' => ['size' => 9],
+                'fill' => [
+                    'fillType'   => Fill::FILL_SOLID,
+                    'startColor' => ['rgb' => '009EA3'],
+                ],
+                'alignment' => [
+                    'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    'vertical'   => Alignment::VERTICAL_CENTER,
+                ],
+                'borders' => [
+                    'bottom' => [
+                        'borderStyle' => Border::BORDER_MEDIUM,
+                        'color'       => ['rgb' => 'B3569F'],
+                    ],
+                ],
             ],
 
-            "A3:A" . ($lastRow + 1) => [
+            "A2:{$lastCol}{$lastRow}" => [
+                'alignment' => ['vertical' => Alignment::VERTICAL_CENTER],
+                'borders'   => [
+                    'allBorders' => [
+                        'borderStyle' => Border::BORDER_THIN,
+                        'color'       => ['rgb' => 'CCE6E5'],
+                    ],
+                ],
+                'font' => [
+                    'size'  => 9,
+                    'color' => ['rgb' => '1E293B'],
+                ],
+            ],
+
+
+            "A2:A{$lastRow}" => [
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
-                'font'      => ['bold' => true, 'color' => ['rgb' => '7B9FF5']],
+                'font'      => [
+                    'bold'  => true,
+                    'color' => ['rgb' => '007A7F'],
+                ],
             ],
 
-            "B3:B" . ($lastRow + 1) => [
-                'font' => ['bold' => true, 'size' => 9],
+            "B2:B{$lastRow}" => [
+                'font' => [
+                    'bold'  => true,
+                    'size'  => 9,
+                    'color' => ['rgb' => '1E293B'],
+                ],
             ],
 
-            "F3:F" . ($lastRow + 1) => [
-                'font'      => ['bold' => true, 'color' => ['rgb' => '5BC0AA']],
+            "F2:F{$lastRow}" => [
+                'font' => [
+                    'bold'  => true,
+                    'color' => ['rgb' => '8B3A7A'],
+                ],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
             ],
 
-            "L3:L" . ($lastRow + 1) => [
-                'font'      => ['color' => ['rgb' => '7A8A9A'], 'size' => 8],
+
+            "L2:L{$lastRow}" => [
+                'font' => [
+                    'size'  => 8,
+                    'color' => ['rgb' => '334155'],
+                ],
                 'alignment' => ['horizontal' => Alignment::HORIZONTAL_CENTER],
             ],
         ];

@@ -264,12 +264,12 @@
                                     </div>
                                 </div>
 
-                                {{-- Employee Name — auto-fetch but manually editable --}}
+                                {{-- Employee Name  --}}
                                 <div class="col-12 col-md-6">
                                     <div class="form-field" id="field_employee_name">
                                         <label class="form-label" for="employee_name">
                                             Employee Name
-                                           
+
                                         </label>
                                         <div class="emp-name-wrap">
                                             <input type="text" class="form-control emp-name-editable"
@@ -358,7 +358,7 @@
 <script>
     $(document).ready(function(){
 
-        // ── Auto-fetch Employee Name on Employee Code keyup ──
+
         $('#employee_code').on('keyup', function(){
             let code = $(this).val().trim();
             if(code.length > 0){
@@ -372,6 +372,7 @@
                             $('#emp-autofilled-badge').fadeIn(200);
                             $('#field_employee_name').removeClass('field-error');
                         } else {
+                            $('#employee_name').val('');
                             $('#emp-autofilled-badge').fadeOut(150);
                         }
                     }
@@ -381,13 +382,11 @@
             }
         });
 
-        // Hide auto-filled badge if user manually edits name
         $('#employee_name').on('input', function(){
             $('#emp-autofilled-badge').fadeOut(150);
             $(this).closest('.form-field').removeClass('field-error');
         });
 
-        // ── Photo Upload & Preview ──
         $('#photo').on('change', function(){
             let file = this.files[0];
             if(file){
@@ -404,7 +403,6 @@
             }
         });
 
-        // ── Discard Photo ──
         $('#btn-discard').on('click', function(){
             $('#photo').val('');
             $('#photo-preview').attr('src', '');
@@ -414,12 +412,10 @@
             $('#photo').css('pointer-events', 'auto');
         });
 
-        // ── Clear validation error on input ──
         $('.form-control').on('input change', function(){
             $(this).closest('.form-field').removeClass('field-error');
         });
 
-        // ── jQuery Validate ──
         $('#doctorForm').validate({
             errorElement: 'span',
             errorClass: 'error-msg',
