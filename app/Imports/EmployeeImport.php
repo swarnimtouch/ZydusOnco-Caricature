@@ -9,13 +9,10 @@ class EmployeeImport implements ToModel
 {
     public function model(array $row)
     {
-        // Skip header row
-        if ($row[0] == 'Employee Id') {
-            return null;
-        }
+       
 
         return new Employee([
-            'employee_id' => $row[0],
+            'employee_code' => $row[0],
             'name'          => $row[1],
             'city'          => $row[2],
             'address'       => $row[3],

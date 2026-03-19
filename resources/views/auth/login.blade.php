@@ -7,61 +7,157 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .login-card {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255,255,255,0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 16px;
-            padding: 40px;
-        }
-        .login-card .brand {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .form-control {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: #fff;
-            border-radius: 8px;
-            padding: 12px 15px;
-        }
-        .form-control:focus {
-            background: rgba(255,255,255,0.12);
-            color: #fff;
-            border-color: #4e73df;
-            box-shadow: 0 0 0 3px rgba(78,115,223,0.25);
-        }
-        .form-control::placeholder { color: rgba(255,255,255,0.4); }
-        .form-label { color: rgba(255,255,255,0.75); font-size: 0.875rem; }
-        .btn-login {
-            background: linear-gradient(135deg, #4e73df, #224abe);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px;
-            font-weight: 600;
-            width: 100%;
-            transition: opacity 0.2s;
-        }
-        .btn-login:hover { opacity: 0.9; color: #fff; }
-        .input-group-text {
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.5);
-        }
-    </style>
+    /* Import DM Sans font directly in CSS since it's not in the login head */
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
+
+    /* ── Premium Light Theme Variables ── */
+    :root {
+        --primary:      #009ea3; 
+        --primary-soft: #e0f2f1;
+        --card-bg:      #ffffff;
+        --text-main:    #1e293b;
+        --text-muted:   #64748b;
+        --border-color: rgba(226, 232, 240, 0.6);
+        --input-bg:     #f1f5f9;
+        --input-focus:  #ffffff;
+        --shadow-md:    0 10px 30px rgba(0,0,0,0.04);
+    }
+
+    body {
+        background: linear-gradient(135deg, #cceff1 0%, #efd6ea 100%);
+        font-family: 'DM Sans', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        color: var(--text-main);
+    }
+
+    /* ── Card Design ── */
+    .login-card {
+        width: 100%;
+        max-width: 420px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: var(--shadow-md);
+    }
+
+    .login-card .brand {
+        color: var(--text-main);
+        font-size: 1.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 30px;
+        font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Make the brand hospital icon teal */
+    .login-card .brand .text-primary {
+        color: var(--primary) !important;
+    }
+
+    /* ── Labels ── */
+    .form-label {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-muted);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    /* Fix Remember Me Label (Taki wo uppercase na ho) */
+    .mb-4.d-flex.align-items-center .form-label {
+        margin-bottom: 0;
+        text-transform: none;
+        letter-spacing: normal;
+        font-size: 0.9rem;
+        color: var(--text-main);
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    /* ── Modern Inputs & Groups ── */
+    .input-group {
+        background: var(--input-bg);
+        border: 1.5px solid transparent;
+        border-radius: 12px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
+        transition: all 0.3s ease;
+        overflow: hidden; /* Important to keep border-radius clean with children */
+    }
+    
+    .input-group:focus-within {
+        border-color: var(--primary);
+        background: var(--input-focus);
+        box-shadow: 0 0 0 4px var(--primary-soft);
+    }
+
+    .form-control {
+        background: transparent;
+        border: none;
+        color: var(--text-main);
+        padding: 14px 18px 14px 0;
+        font-size: 0.95rem;
+        box-shadow: none !important; /* Overrides Bootstrap's default focus ring */
+    }
+
+    .form-control::placeholder {
+        color: #94a3b8;
+    }
+
+    .form-control:focus {
+        background: transparent;
+        color: var(--text-main);
+        box-shadow: none; 
+    }
+
+    .input-group-text {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 14px 18px;
+    }
+
+    /* ── Checkbox ── */
+    input[type="checkbox"] {
+        accent-color: var(--primary);
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+    }
+
+    /* ── Submit Button ── */
+    .btn-login {
+        padding: 14px 36px;
+        background: linear-gradient(to right, #009ea3 0%, #b3569f 100%);
+        color: #ffffff;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        letter-spacing: 0.03em;
+        transition: all 0.3s ease;
+        box-shadow: 0 8px 16px rgba(179, 86, 159, 0.25);
+        width: 100%;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 20px rgba(179, 86, 159, 0.35);
+        color: #ffffff;
+    }
+
+    .btn-login:active { 
+        transform: translateY(1px); 
+    }
+</style>
 </head>
 <body>
 
@@ -69,7 +165,7 @@
 
     {{-- Brand --}}
     <div class="brand">
-        <i class="fas fa-hospital-alt me-2 text-primary"></i>
+        <img src="{{ asset('images/logo.png') }}" alt="MedPanel Logo" style="height: 55px; display: block; margin: 0 auto 12px auto; object-fit: contain;">
         Admin Panel
     </div>
 
