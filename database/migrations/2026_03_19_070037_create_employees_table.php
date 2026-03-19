@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->integer('employee_code')->unique();
             $table->string('name');
-            $table->string('city');
-            $table->string('address');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('city')->nullable();
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
