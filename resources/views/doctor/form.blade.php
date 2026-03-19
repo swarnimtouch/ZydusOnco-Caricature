@@ -269,9 +269,7 @@
                                     <div class="form-field" id="field_employee_name">
                                         <label class="form-label" for="employee_name">
                                             Employee Name
-                                            <span id="emp-fetch-hint" style="font-size:0.65rem; color:var(--primary); margin-left:6px; font-weight:500; text-transform:none; letter-spacing:0;">
-                                                (auto-filled · editable)
-                                            </span>
+                                           
                                         </label>
                                         <div class="emp-name-wrap">
                                             <input type="text" class="form-control emp-name-editable"
