@@ -308,8 +308,29 @@
                                     </div>
                                 </div>
 
-                                {{-- Doctor Photo --}}
+                                {{--gender--}}
                                 <div class="col-12 col-md-6">
+                                    <div class="form-field" id="field_gender">
+                                        <label class="form-label">Gender</label>
+
+                                        <div class="d-flex gap-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender" id="male" value="Male"
+                                                    {{ old('gender') == 'Male' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="male">Male</label>
+                                            </div>
+
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="gender" id="female" value="Female"
+                                                    {{ old('gender') == 'Female' ? 'checked' : '' }}>
+                                                <label class="form-check-label" for="female">Female</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Doctor Photo --}}
+                                <div class="col-12 col-md-12">
                                     <div class="form-field" id="field_photo">
                                         <label class="form-label" for="photo">Doctor Photo</label>
                                         <div class="upload-container text-center">
@@ -332,7 +353,7 @@
                                             </div>
 
                                             <button type="button" id="btn-discard" class="btn btn-sm btn-outline-danger mt-3" style="display:none; width:auto; margin:0 auto;">
-                                                Discard Image
+                                                Remove Image
                                             </button>
                                         </div>
                                     </div>
@@ -428,10 +449,16 @@
             errorPlacement: function(error, element){
                 error.css('display', 'flex');
                 error.prepend('<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> ');
+
                 if(element.attr('name') === 'photo'){
                     error.insertAfter(element.closest('.upload-container'));
+
                 } else if(element.attr('name') === 'employee_name'){
                     error.insertAfter(element.closest('.emp-name-wrap'));
+
+                } else if(element.attr('name') === 'gender'){
+                    error.insertAfter($('#field_gender .d-flex'));
+
                 } else {
                     error.insertAfter(element);
                 }
@@ -442,6 +469,7 @@
                 doctor_name:   { required: true },
                 hospital_name: { required: true },
                 city:          { required: true },
+                gender:          { required: true },
                 photo:         { required: true }
             },
             messages: {
@@ -450,6 +478,7 @@
                 doctor_name:   "Doctor Name is required",
                 hospital_name: "Hospital Name is required",
                 city:          "City is required",
+                gender:          "Gender is required",
                 photo:         "Please upload a doctor photo"
             }
         });

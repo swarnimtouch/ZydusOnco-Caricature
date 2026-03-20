@@ -511,6 +511,7 @@
                     <th class="th-doctor">Doctor Name</th>
                     <th class="th-doctor">Hospital Name</th>
                     <th class="th-doctor">Doctor City</th>
+                    <th class="th-doctor">Doctor Gender</th>
                     <th class="th-employee col-sep">Employee Name</th>
                     <th class="th-employee">Employee Code</th>
                     <th class="th-employee">Employee City</th>
@@ -543,7 +544,7 @@
 
                         <td><span class="badge-mono">{{ $doctor->hospital_name }}</span></td>
                         <td class="text-muted-sm">{{ $doctor->city ?? '—' }}</td>
-
+                        <td class="text-muted-sm">{{ $doctor->gender ?? '—' }}</td>
                         <td class="col-sep" style="font-weight:500;">{{ $doctor->employee->name ?? '—' }}</td>
                         <td><span class="badge-mono emp">{{ $doctor->employee->employee_code ?? '—' }}</span></td>
                         <td class="text-muted-sm">{{ $doctor->employee->city ?? '—' }}</td>
@@ -641,6 +642,10 @@
                         <div class="m-field">
                             <div class="m-field-label"><i class="fas fa-hospital"></i> Hospital Name</div>
                             <div class="m-field-value {{ $doctor->hospital_name ? '' : 'muted' }}">{{ $doctor->hospital_name ?? 'Not set' }}</div>
+                        </div>
+                        <div class="m-field">
+                            <div class="m-field-label"><i class="fas fa-hospital"></i> Gender</div>
+                            <div class="m-field-value {{ $doctor->gender ? '' : 'muted' }}">{{ $doctor->gender ?? 'Not set' }}</div>
                         </div>
                     </div>
                 </div>

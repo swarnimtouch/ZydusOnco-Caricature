@@ -56,6 +56,7 @@ class DoctorExport implements
             'Doctor Name',
             'Hospital Name',
             'Doctor City',
+            'Doctor Gender',
             'Employee Name',
             'Employee Code',
             'Employee City',
@@ -63,7 +64,7 @@ class DoctorExport implements
             'Employee Mobile',
             'Employee Email',
             'Photo URL',
-            'Created At (IST)',
+            'Created At',
         ];
     }
 
@@ -81,6 +82,7 @@ class DoctorExport implements
             $doctor->name,
             $doctor->hospital_name,
             $doctor->city                    ?? '—',
+            $doctor->gender                    ?? '—',
             $doctor->employee->name          ?? '—',
             $doctor->employee->employee_code ?? '—',
             $doctor->employee->city          ?? '—',
@@ -99,21 +101,22 @@ class DoctorExport implements
             'B' => 24,   // Doctor Name
             'C' => 26,   // Hospital Name
             'D' => 18,   // Doctor City
-            'E' => 24,   // Employee Name
-            'F' => 18,   // Employee Code
-            'G' => 18,   // Employee City
-            'H' => 32,   // Employee Address
-            'I' => 18,   // Employee Mobile
-            'J' => 30,   // Employee Email
-            'K' => 40,   // Photo URL
-            'L' => 26,   // Created At (IST)
+            'E' => 18,   // Doctor City
+            'F' => 24,   // Employee Name
+            'G' => 18,   // Employee Code
+            'H' => 18,   // Employee City
+            'I' => 32,   // Employee Address
+            'J' => 18,   // Employee Mobile
+            'K' => 30,   // Employee Email
+            'L' => 40,   // Photo URL
+            'M' => 26,   // Created At (IST)
         ];
     }
 
     public function styles(Worksheet $sheet): array
     {
         $lastRow = $sheet->getHighestRow();
-        $lastCol = 'L';
+        $lastCol = 'M';
 
         // Freeze header row
         $sheet->freezePane('A2');

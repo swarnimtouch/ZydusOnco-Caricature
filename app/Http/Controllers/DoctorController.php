@@ -38,6 +38,7 @@ class DoctorController extends Controller
             'doctor_name' => 'required',
             'hospital_name' => 'required',
             'city' => 'required',
+            'gender' => 'required',
             'photo' => 'required|image'
         ]);
 
@@ -61,6 +62,7 @@ class DoctorController extends Controller
             'name' => $request->doctor_name,
             'hospital_name' => $request->hospital_name,
             'city' => $request->city,
+            'gender' => $request->gender,
             'photo' => $fileUrl
         ]);
 

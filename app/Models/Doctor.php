@@ -12,6 +12,7 @@ class Doctor extends Model
         'name',
         'hospital_name',
         'city',
+        'gender',
         'photo'
     ];
 
