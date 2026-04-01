@@ -6,11 +6,8 @@
     <title>@yield('title', 'Admin Panel')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Import DM Sans font to replace the old Outfit font */
-        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap');
-
         :root {
             --bg-deep:      linear-gradient(135deg, #cceff1 0%, #efd6ea 100%);
             --bg-card:      #ffffff;
@@ -56,6 +53,7 @@
             box-shadow: var(--shadow-sm);
         }
 
+        /* Desktop: default open, collapsed when toggled */
         #sidebar.collapsed { transform: translateX(calc(-1 * var(--sidebar-w))); }
 
         .sidebar-brand {
@@ -63,30 +61,9 @@
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
-            justify-content: center; /* Ye line add ki hai center karne ke liye */
+            justify-content: center;
             gap: 12px;
             min-height: var(--topbar-h);
-        }
-        .sidebar-brand .brand-icon {
-            width: 38px; height: 38px;
-            /* Premium gradient for Brand Icon */
-            background: linear-gradient(135deg, var(--accent), var(--accent-2));
-            border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; color: #fff;
-            flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(179, 86, 159, 0.2);
-        }
-        .sidebar-brand .brand-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            color: var(--text-primary);
-        }
-        .sidebar-brand .brand-sub {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            font-weight: 500;
         }
 
         .sidebar-nav { flex: 1; padding: 20px 16px; overflow-y: auto; }
@@ -200,6 +177,7 @@
             transition: left 0.3s cubic-bezier(.4,0,.2,1);
             box-shadow: var(--shadow-sm);
         }
+        /* When sidebar is collapsed on desktop, topbar stretches full width */
         #topbar.expanded { left: 0; }
 
         .topbar-toggle {
@@ -210,6 +188,7 @@
             padding: 8px;
             border-radius: 8px;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
         .topbar-toggle:hover { background: var(--bg-card-h); color: var(--accent); }
 
@@ -221,33 +200,6 @@
         .topbar-breadcrumb span { color: var(--text-primary); font-weight: 700; }
 
         .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
-
-        .topbar-btn {
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-            display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-            text-decoration: none;
-            box-shadow: var(--shadow-sm);
-        }
-        .topbar-btn:hover {
-            background: var(--bg-card-h);
-            color: var(--accent);
-            border-color: var(--border-h);
-            transform: translateY(-1px);
-        }
-        .topbar-btn .badge-dot {
-            position: absolute; top: 8px; right: 8px;
-            width: 8px; height: 8px;
-            border-radius: 50%;
-            background: var(--accent-danger);
-            border: 2px solid var(--bg-card);
-        }
 
         .logout-btn {
             display: flex; align-items: center; gap: 6px;
@@ -272,13 +224,14 @@
         #main-content {
             margin-left: var(--sidebar-w);
             margin-top: var(--topbar-h);
-            padding: 36px 36px;
+            padding: 36px;
             min-height: calc(100vh - var(--topbar-h));
             transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
         }
+        /* When sidebar collapsed on desktop, content fills full width */
         #main-content.expanded { margin-left: 0; }
 
-        /* ── Overlay (mobile) ── */
+        /* ── Overlay (mobile only) ── */
         #sidebar-overlay {
             display: none;
             position: fixed; inset: 0;
@@ -286,14 +239,26 @@
             backdrop-filter: blur(4px);
             z-index: 1035;
         }
+        #sidebar-overlay.show { display: block; }
 
-        /* ── Responsive ── */
+        /* ── Mobile Responsive ── */
         @media (max-width: 991px) {
-            #sidebar { transform: translateX(calc(-1 * var(--sidebar-w))); }
-            #sidebar.mobile-open { transform: translateX(0); }
-            #topbar { left: 0 !important; }
-            #main-content { margin-left: 0 !important; }
-            #sidebar-overlay.show { display: block; }
+            /* On mobile: sidebar is HIDDEN by default */
+            #sidebar {
+                transform: translateX(calc(-1 * var(--sidebar-w)));
+            }
+            /* Open state on mobile */
+            #sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            /* Topbar always full width on mobile */
+            #topbar {
+                left: 0 !important;
+            }
+            /* Content always full width on mobile */
+            #main-content {
+                margin-left: 0 !important;
+            }
         }
 
         @media (max-width: 576px) {
@@ -322,7 +287,7 @@
 </head>
 <body>
 
-{{-- Sidebar Overlay (mobile) --}}
+{{-- Sidebar Overlay (mobile only) --}}
 <div id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
 {{-- ── Sidebar ── --}}
@@ -361,15 +326,19 @@
     </div>
 </nav>
 
+{{-- ── Topbar ── --}}
 <header id="topbar">
+
+    {{-- Toggle Button (hamburger) --}}
+    <button class="topbar-toggle" onclick="toggleSidebar()" aria-label="Toggle sidebar">
+        <i class="fas fa-bars"></i>
+    </button>
 
     <div class="topbar-breadcrumb">
         Admin &nbsp;/&nbsp; <span>@yield('page-title', 'Dashboard')</span>
     </div>
 
     <div class="topbar-right">
-
-
         <form action="{{ route('admin.logout') }}" method="POST" style="display:inline">
             @csrf
             <button type="submit" class="logout-btn">
@@ -387,29 +356,45 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    const sidebar  = document.getElementById('sidebar');
-    const topbar   = document.getElementById('topbar');
-    const content  = document.getElementById('main-content');
-    const overlay  = document.getElementById('sidebar-overlay');
-    const isMobile = () => window.innerWidth < 992;
-    let collapsed  = false;
+    const sidebar   = document.getElementById('sidebar');
+    const topbar    = document.getElementById('topbar');
+    const content   = document.getElementById('main-content');
+    const overlay   = document.getElementById('sidebar-overlay');
+
+    const isMobile  = () => window.innerWidth < 992;
+
+    // Desktop: sidebar open by default, so collapsed = false initially
+    let desktopCollapsed = false;
 
     function toggleSidebar() {
         if (isMobile()) {
-            sidebar.classList.toggle('mobile-open');
-            overlay.classList.toggle('show');
+            // Mobile: toggle open/close (default is closed)
+            const isOpen = sidebar.classList.toggle('mobile-open');
+            overlay.classList.toggle('show', isOpen);
         } else {
-            collapsed = !collapsed;
-            sidebar.classList.toggle('collapsed', collapsed);
-            topbar.classList.toggle('expanded', collapsed);
-            content.classList.toggle('expanded', collapsed);
+            // Desktop: toggle collapse (default is open)
+            desktopCollapsed = !desktopCollapsed;
+            sidebar.classList.toggle('collapsed', desktopCollapsed);
+            topbar.classList.toggle('expanded', desktopCollapsed);
+            content.classList.toggle('expanded', desktopCollapsed);
         }
     }
 
+    // On resize: clean up classes properly
     window.addEventListener('resize', () => {
         if (!isMobile()) {
+            // Coming back to desktop: remove mobile classes
             sidebar.classList.remove('mobile-open');
             overlay.classList.remove('show');
+            // Restore desktop state
+            sidebar.classList.toggle('collapsed', desktopCollapsed);
+            topbar.classList.toggle('expanded', desktopCollapsed);
+            content.classList.toggle('expanded', desktopCollapsed);
+        } else {
+            // Coming to mobile: remove desktop collapse classes
+            sidebar.classList.remove('collapsed');
+            topbar.classList.remove('expanded');
+            content.classList.remove('expanded');
         }
     });
 </script>
