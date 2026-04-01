@@ -7,22 +7,22 @@
     <style>
     /* ── Premium Light Theme Variables (From Login/Form) ── */
     :root {
-        --primary:      #009ea3; 
+        --primary:      #009ea3;
         --primary-soft: #e0f2f1;
         --accent:       #009ea3;
         --accent-2:     #b3569f;
         --accent-3:     #10b981;
         --accent-warn:  #f59e0b;
         --accent-danger:#ef4444;
-        
+
         --bg-card:      #ffffff;
         --bg-card-h:    #f8fafc;
         --border:       rgba(226, 232, 240, 0.8);
         --border-h:     rgba(0, 158, 163, 0.3);
-        
+
         --text-primary: #1e293b;
         --text-muted:   #64748b;
-        
+
         --shadow-sm:    0 2px 4px rgba(0,0,0,0.02);
         --shadow-md:    0 10px 30px rgba(0,0,0,0.04);
         --shadow-lg:    0 20px 40px rgba(0,0,0,0.06);
@@ -53,9 +53,9 @@
         transform: translate(30px, -30px);
         transition: transform 0.3s ease;
     }
-    .stat-card:hover { 
-        border-color: var(--border-h); 
-        transform: translateY(-4px); 
+    .stat-card:hover {
+        border-color: var(--border-h);
+        transform: translateY(-4px);
         box-shadow: var(--shadow-md);
     }
     .stat-card:hover::before {
@@ -78,25 +78,25 @@
     .stat-card:hover .stat-icon {
         transform: scale(1.05);
     }
-    
+
     .stat-icon.blue   { background: rgba(0, 158, 163, 0.12); color: var(--accent); }
     .stat-icon.teal   { background: rgba(179, 86, 159, 0.12); color: var(--accent-2); }
     .stat-icon.green  { background: rgba(16, 185, 129, 0.12); color: var(--accent-3); }
     .stat-icon.yellow { background: rgba(245, 158, 11, 0.12); color: var(--accent-warn); }
 
-    .stat-label { 
-        font-size: 0.8rem; 
-        color: var(--text-muted); 
-        font-weight: 600; 
-        margin-bottom: 6px; 
-        text-transform: uppercase; 
-        letter-spacing: 0.05em; 
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
-    .stat-value { 
-        font-size: 2rem; 
-        font-weight: 700; 
-        line-height: 1; 
-        color: var(--text-primary); 
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        line-height: 1;
+        color: var(--text-primary);
     }
     .stat-delta { font-size: 0.75rem; color: var(--accent-3); margin-top: 6px; font-weight: 500; }
     .stat-delta.down { color: var(--accent-danger); }
@@ -215,8 +215,8 @@
 
 
     <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3">
-            <div class="stat-card blue">
+        <div class="col-12 col-sm-6 col-xl-3">
+        <div class="stat-card blue">
                 <div class="stat-icon blue"><i class="fas fa-user-md"></i></div>
                 <div>
                     <div class="stat-label">Total Doctors</div>
